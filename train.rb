@@ -2,13 +2,19 @@
 
 require_relative 'with_manufacturer'
 require_relative 'instance_counter'
+require_relative 'validate'
 
 class Train
   include InstanceCounter
   include WithManufacturer
+  include Validation
+  NUMBER_FORMAT = /^[A-Za-z0-9]{3}-?[A-Za-z0-9]{2}$/.freeze
 
   attr_reader :type, :num, :wagons, :attach_wagon, :all
   attr_accessor :route, :station
+
+  validate :number, :format, NUMBER_FORMAT
+  validate :number, :type, String
 
   class ValidationError < StandardError
   end
