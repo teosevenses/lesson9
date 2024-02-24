@@ -1,12 +1,17 @@
 # frozen_string_literal: true
 
 require_relative 'instance_counter'
+require_relative 'validate'
 
 class Station
   include InstanceCounter
+  include Validation
 
   attr_accessor :trains, :name
   attr_reader :all
+
+  validate :name, :presence
+  validate :name, :type, String
 
   class ValidationError < StandardError
   end
@@ -14,7 +19,7 @@ class Station
   def initialize(name)
     @name = name
     @trains = []
-    raise ValidationError, 'Некорректное наименование станции, длина не менее двух символов' unless valid?
+    raise ValidationError, 'Некорректное наименование станции, длина не менее двух символов' unless valid?.to_s
 
     @all = []
     @all << self
